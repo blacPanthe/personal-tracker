@@ -125,5 +125,11 @@ app.delete('/api/entries/:id', (req, res) => {
   res.status(204).end();
 });
 
+const frontendDist = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendDist));
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
+
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Tracker API listening on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Tracker listening on http://localhost:${PORT}`));
