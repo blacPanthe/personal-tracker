@@ -102,7 +102,7 @@ export function formatTooltip(metric, iso, value) {
   const month = date.toLocaleDateString('en-US', { month: 'long' });
   const dateLabel = `${month} ${ordinal(date.getDate())}`;
 
-  if (value === undefined || value === null) return `No data on ${dateLabel}.`;
-  if (metric.type === 'boolean') return `${value > 0 ? 'Done' : 'Not done'} on ${dateLabel}.`;
-  return `${value}${metric.unit ? ` ${metric.unit}` : ''} on ${dateLabel}.`;
+  if (value === undefined || value === null) return `No data for ${metric.name} on ${dateLabel}.`;
+  if (metric.type === 'boolean') return `${metric.name} ${value > 0 ? 'done' : 'not done'} on ${dateLabel}.`;
+  return `${value}${metric.unit ? ` ${metric.unit}` : ''} of ${metric.name} on ${dateLabel}.`;
 }
