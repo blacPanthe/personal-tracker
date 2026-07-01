@@ -35,7 +35,6 @@ const defaultMetrics = [
   { key: 'no_porn', name: 'No Porn', unit: null, type: 'boolean', goal: null, color: '#ff3131', sort_order: 5 },
   { key: 'sleep', name: 'Sleep', unit: 'hrs', type: 'numeric', goal: 8, color: '#7c4dff', sort_order: 6 },
   { key: 'workout', name: 'Workout', unit: null, type: 'boolean', goal: null, color: '#ff9100', sort_order: 7 },
-  { key: 'screen_time', name: 'Low Screen Time', unit: 'min', type: 'numeric', goal: 120, color: '#ffd400', sort_order: 8 },
   { key: 'reading', name: 'Reading', unit: 'min', type: 'numeric', goal: 30, color: '#2bff88', sort_order: 9 },
   { key: 'studying', name: 'Studying', unit: 'min', type: 'numeric', goal: 60, color: '#00fff0', sort_order: 10 },
 ];
