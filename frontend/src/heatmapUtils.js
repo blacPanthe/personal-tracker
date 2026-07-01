@@ -89,3 +89,14 @@ export function monthLabels(weeks) {
   });
   return labels;
 }
+
+export function formatTooltip(metric, iso, value) {
+  const dateLabel = new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+  if (value === undefined || value === null) return `${dateLabel}: no data`;
+  if (metric.type === 'boolean') return `${dateLabel}: ${value > 0 ? 'done' : 'not done'}`;
+  return `${dateLabel}: ${value}${metric.unit ? ` ${metric.unit}` : ''}`;
+}

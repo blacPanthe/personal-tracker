@@ -1,4 +1,4 @@
-import { buildWeeks, cellColor, monthLabels } from '../heatmapUtils';
+import { buildWeeks, cellColor, monthLabels, formatTooltip } from '../heatmapUtils';
 
 export default function Heatmap({ metric, entryMap, onSelectDay }) {
   const weeks = buildWeeks();
@@ -22,7 +22,7 @@ export default function Heatmap({ metric, entryMap, onSelectDay }) {
                   key={di}
                   className="heatmap-cell"
                   style={{ background: cellColor(metric, entryMap[iso]) }}
-                  title={`${iso}: ${entryMap[iso] ?? 'no data'}`}
+                  data-tooltip={formatTooltip(metric, iso, entryMap[iso])}
                   onClick={() => onSelectDay(iso)}
                 />
               ) : (
