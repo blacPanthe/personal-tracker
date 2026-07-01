@@ -1,10 +1,18 @@
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 
-// iOS simulator can reach the Mac's localhost directly; the Android emulator
-// routes host loopback through 10.0.2.2 instead. A physical device needs the
-// Mac's LAN IP here (e.g. http://192.168.1.23:4000/api).
-const HOST = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
-const API_BASE = `http://${HOST}:4000/api`;
+// A physical device can't reach the Mac via "localhost" - that resolves to the
+// device itself. Expo Go already knows the Mac's LAN IP (it's how the device
+// downloaded the JS bundle in the first place), so reuse that instead of
+// hardcoding one that'll go stale whenever the router reassigns it.
+function resolveHost() {
+  const hostUri = Constants.expoConfig?.hostUri || Constants.expoGoConfig?.debuggerHost;
+  if (hostUri) return hostUri.split(':')[0];
+  // Fallback for simulators/emulators when hostUri isn't available.
+  return Platform.OS === 'android' ? '10.0.2.2' : 'localhost';
+}
+
+const API_BASE = `http://${resolveHost()}:4000/api`;
 
 export async function getMetrics() {
   const res = await fetch(`${API_BASE}/metrics`);
