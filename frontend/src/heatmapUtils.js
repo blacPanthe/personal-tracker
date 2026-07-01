@@ -90,13 +90,19 @@ export function monthLabels(weeks) {
   return labels;
 }
 
+function ordinal(day) {
+  if (day % 10 === 1 && day % 100 !== 11) return `${day}st`;
+  if (day % 10 === 2 && day % 100 !== 12) return `${day}nd`;
+  if (day % 10 === 3 && day % 100 !== 13) return `${day}rd`;
+  return `${day}th`;
+}
+
 export function formatTooltip(metric, iso, value) {
-  const dateLabel = new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-  if (value === undefined || value === null) return `${dateLabel}: no data`;
-  if (metric.type === 'boolean') return `${dateLabel}: ${value > 0 ? 'done' : 'not done'}`;
-  return `${dateLabel}: ${value}${metric.unit ? ` ${metric.unit}` : ''}`;
+  const date = new Date(`${iso}T00:00:00`);
+  const month = date.toLocaleDateString('en-US', { month: 'long' });
+  const dateLabel = `${month} ${ordinal(date.getDate())}`;
+
+  if (value === undefined || value === null) return `No data on ${dateLabel}.`;
+  if (metric.type === 'boolean') return `${value > 0 ? 'Done' : 'Not done'} on ${dateLabel}.`;
+  return `${value}${metric.unit ? ` ${metric.unit}` : ''} on ${dateLabel}.`;
 }
