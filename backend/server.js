@@ -37,7 +37,7 @@ const defaultMetrics = [
   { key: 'workout', name: 'Workout', unit: null, type: 'boolean', goal: null, color: '#ff9100', sort_order: 7 },
   { key: 'reading', name: 'Reading', unit: 'min', type: 'numeric', goal: 30, color: '#2bff88', sort_order: 9 },
   { key: 'studying', name: 'Studying', unit: 'min', type: 'numeric', goal: 60, color: '#00fff0', sort_order: 10 },
-  { key: 'weight', name: 'Weight', unit: 'kg', type: 'numeric', goal: null, color: '#2979ff', sort_order: 11 },
+  { key: 'weight', name: 'Weight', unit: 'kg', type: 'numeric', goal: null, color: '#2979ff', sort_order: 0 },
 ];
 
 const insertMetric = db.prepare(`
