@@ -75,6 +75,35 @@ export function currentStreak(metric, entryMap) {
   return streak;
 }
 
+export function totalActiveDays(metric, entryMap) {
+  let total = 0;
+  for (const value of Object.values(entryMap)) {
+    if (intensity(metric, value) > 0) total++;
+  }
+  return total;
+}
+
+export function longestStreak(metric, entryMap) {
+  const activeDays = Object.keys(entryMap)
+    .filter((iso) => intensity(metric, entryMap[iso]) > 0)
+    .sort();
+  let longest = 0;
+  let running = 0;
+  let prev = null;
+  for (const iso of activeDays) {
+    const date = new Date(`${iso}T00:00:00`);
+    if (prev) {
+      const dayGap = Math.round((date - prev) / 86400000);
+      running = dayGap === 1 ? running + 1 : 1;
+    } else {
+      running = 1;
+    }
+    longest = Math.max(longest, running);
+    prev = date;
+  }
+  return longest;
+}
+
 export function monthLabels(weeks) {
   const labels = [];
   let lastMonth = -1;

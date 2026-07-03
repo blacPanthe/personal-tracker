@@ -107,10 +107,23 @@ body {
   color: var(--metric-color, var(--text));
 }
 
-.metric-streak {
+.metric-stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.metric-streak,
+.metric-stat {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--text-dim);
+}
+
+.metric-stat-sep {
+  color: var(--border);
+  font-size: 12px;
 }
 
 .metric-form {

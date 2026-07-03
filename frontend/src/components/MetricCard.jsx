@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Heatmap from './Heatmap';
-import { currentStreak, toLocalIso } from '../heatmapUtils';
+import { currentStreak, longestStreak, totalActiveDays, toLocalIso } from '../heatmapUtils';
 
 const todayIso = () => toLocalIso(new Date());
 
@@ -8,6 +8,8 @@ export default function MetricCard({ metric, entryMap, onLog }) {
   const [date, setDate] = useState(todayIso());
   const [value, setValue] = useState('');
   const streak = currentStreak(metric, entryMap);
+  const best = longestStreak(metric, entryMap);
+  const total = totalActiveDays(metric, entryMap);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,9 +24,15 @@ export default function MetricCard({ metric, entryMap, onLog }) {
       <div className="metric-card-header">
         <div>
           <h2>{metric.name}</h2>
-          <span className="metric-streak">
-            {streak > 0 ? `${streak} day${streak === 1 ? '' : 's'} streak` : 'no streak yet'}
-          </span>
+          <div className="metric-stats">
+            <span className="metric-streak">
+              {streak > 0 ? `${streak} day${streak === 1 ? '' : 's'} streak` : 'no streak yet'}
+            </span>
+            <span className="metric-stat-sep">·</span>
+            <span className="metric-stat">best {best}</span>
+            <span className="metric-stat-sep">·</span>
+            <span className="metric-stat">{total} in the last year</span>
+          </div>
         </div>
         <form className="metric-form" onSubmit={handleSubmit}>
           <input
