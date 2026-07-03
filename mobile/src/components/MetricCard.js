@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import Heatmap from './Heatmap';
-import { currentStreak, toLocalIso } from '../heatmapUtils';
+import { currentStreak, longestStreak, totalActiveDays, toLocalIso } from '../heatmapUtils';
 import { colors } from '../theme';
 
 export default function MetricCard({ metric, entryMap, onLog }) {
   const [value, setValue] = useState('');
   const streak = currentStreak(metric, entryMap);
+  const best = longestStreak(metric, entryMap);
+  const total = totalActiveDays(metric, entryMap);
 
   const handleLog = () => {
     const today = toLocalIso(new Date());
@@ -27,6 +29,8 @@ export default function MetricCard({ metric, entryMap, onLog }) {
           <Text style={[styles.title, { color: metric.color }]}>{metric.name}</Text>
           <Text style={styles.streak}>
             {streak > 0 ? `${streak} day${streak === 1 ? '' : 's'} streak` : 'no streak yet'}
+            {'  ·  '}best {best}
+            {'  ·  '}{total} in the last year
           </Text>
         </View>
         <View style={styles.form}>

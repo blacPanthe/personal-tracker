@@ -73,3 +73,49 @@ export function currentStreak(metric, entryMap) {
   }
   return streak;
 }
+
+export function totalActiveDays(metric, entryMap) {
+  let total = 0;
+  for (const value of Object.values(entryMap)) {
+    if (intensity(metric, value) > 0) total++;
+  }
+  return total;
+}
+
+export function longestStreak(metric, entryMap) {
+  const activeDays = Object.keys(entryMap)
+    .filter((iso) => intensity(metric, entryMap[iso]) > 0)
+    .sort();
+  let longest = 0;
+  let running = 0;
+  let prev = null;
+  for (const iso of activeDays) {
+    const date = new Date(`${iso}T00:00:00`);
+    if (prev) {
+      const dayGap = Math.round((date - prev) / 86400000);
+      running = dayGap === 1 ? running + 1 : 1;
+    } else {
+      running = 1;
+    }
+    longest = Math.max(longest, running);
+    prev = date;
+  }
+  return longest;
+}
+
+function ordinal(day) {
+  if (day % 10 === 1 && day % 100 !== 11) return `${day}st`;
+  if (day % 10 === 2 && day % 100 !== 12) return `${day}nd`;
+  if (day % 10 === 3 && day % 100 !== 13) return `${day}rd`;
+  return `${day}th`;
+}
+
+export function formatTooltip(metric, iso, value) {
+  const date = new Date(`${iso}T00:00:00`);
+  const month = date.toLocaleDateString('en-US', { month: 'long' });
+  const dateLabel = `${month} ${ordinal(date.getDate())}`;
+
+  if (value === undefined || value === null) return `No data for ${metric.name} on ${dateLabel}.`;
+  if (metric.type === 'boolean') return `${metric.name} ${value > 0 ? 'done' : 'not done'} on ${dateLabel}.`;
+  return `${value}${metric.unit ? ` ${metric.unit}` : ''} of ${metric.name} on ${dateLabel}.`;
+}
