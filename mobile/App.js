@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, ScrollView, Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { SafeAreaView, ScrollView, Text, View, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { getMetrics, getEntriesSummary, upsertEntry } from './src/api';
 import { toLocalIso } from './src/heatmapUtils';
 import MetricCard from './src/components/MetricCard';
+import PlanGenerator from './src/components/PlanGenerator';
 import { colors } from './src/theme';
 
 function isoDaysAgo(days) {
@@ -13,6 +14,7 @@ function isoDaysAgo(days) {
 }
 
 export default function App() {
+  const [tab, setTab] = useState('trackers');
   const [metrics, setMetrics] = useState([]);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -61,15 +63,27 @@ export default function App() {
             Personal <Text style={{ color: colors.neon }}>Tracker</Text>
           </Text>
           <Text style={styles.subtitle}>Your habits, mapped like commits.</Text>
+          <View style={styles.tabs}>
+            <Pressable style={[styles.tab, tab === 'trackers' && styles.tabActive]} onPress={() => setTab('trackers')}>
+              <Text style={[styles.tabText, tab === 'trackers' && styles.tabTextActive]}>Trackers</Text>
+            </Pressable>
+            <Pressable style={[styles.tab, tab === 'plan' && styles.tabActive]} onPress={() => setTab('plan')}>
+              <Text style={[styles.tabText, tab === 'plan' && styles.tabTextActive]}>Meal & Workout Plan</Text>
+            </Pressable>
+          </View>
         </View>
-        {metrics.map((metric) => (
-          <MetricCard
-            key={metric.id}
-            metric={metric}
-            entryMap={entryMapsByMetric[metric.id] || {}}
-            onLog={handleLog}
-          />
-        ))}
+        {tab === 'trackers' ? (
+          metrics.map((metric) => (
+            <MetricCard
+              key={metric.id}
+              metric={metric}
+              entryMap={entryMapsByMetric[metric.id] || {}}
+              onLog={handleLog}
+            />
+          ))
+        ) : (
+          <PlanGenerator />
+        )}
       </ScrollView>
       <StatusBar style="light" />
     </SafeAreaView>
@@ -83,4 +97,9 @@ const styles = StyleSheet.create({
   header: { marginBottom: 24 },
   title: { fontSize: 28, fontWeight: '800', color: colors.text },
   subtitle: { color: colors.textDim, marginTop: 4, fontSize: 13 },
+  tabs: { flexDirection: 'row', gap: 8, marginTop: 16 },
+  tab: { borderWidth: 1, borderColor: colors.border, borderRadius: 8, paddingHorizontal: 14, paddingVertical: 8 },
+  tabActive: { borderColor: colors.neon },
+  tabText: { color: colors.textDim, fontSize: 12 },
+  tabTextActive: { color: colors.neon },
 });
