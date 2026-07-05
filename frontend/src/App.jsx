@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getMetrics, getEntriesSummary, upsertEntry } from './api';
 import MetricCard from './components/MetricCard';
+import PlanGenerator from './components/PlanGenerator';
 import { toLocalIso } from './heatmapUtils';
 
 function isoDaysAgo(days) {
@@ -10,6 +11,7 @@ function isoDaysAgo(days) {
 }
 
 export default function App() {
+  const [tab, setTab] = useState('trackers');
   const [metrics, setMetrics] = useState([]);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,17 +52,32 @@ export default function App() {
           Personal <span className="accent">Tracker</span>
         </h1>
         <p>Your habits, mapped like commits.</p>
+        <nav className="app-tabs">
+          <button
+            className={`app-tab${tab === 'trackers' ? ' active' : ''}`}
+            onClick={() => setTab('trackers')}
+          >
+            Trackers
+          </button>
+          <button className={`app-tab${tab === 'plan' ? ' active' : ''}`} onClick={() => setTab('plan')}>
+            Meal & Workout Plan
+          </button>
+        </nav>
       </header>
-      <main className="metric-list">
-        {metrics.map((metric) => (
-          <MetricCard
-            key={metric.id}
-            metric={metric}
-            entryMap={entryMapsByMetric[metric.id] || {}}
-            onLog={handleLog}
-          />
-        ))}
-      </main>
+      {tab === 'trackers' ? (
+        <main className="metric-list">
+          {metrics.map((metric) => (
+            <MetricCard
+              key={metric.id}
+              metric={metric}
+              entryMap={entryMapsByMetric[metric.id] || {}}
+              onLog={handleLog}
+            />
+          ))}
+        </main>
+      ) : (
+        <PlanGenerator />
+      )}
     </div>
   );
 }

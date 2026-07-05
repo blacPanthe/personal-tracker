@@ -73,6 +73,238 @@ body {
   font-size: 14px;
 }
 
+.app-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.app-tab {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.app-tab.active {
+  border-color: var(--neon);
+  color: var(--neon);
+}
+
+.plan-page {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.plan-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.plan-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 14px;
+}
+
+.plan-form-grid label,
+.plan-day-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+
+.plan-form-grid input,
+.plan-form-grid select {
+  background: #0d0d10;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--mono);
+}
+
+.plan-form-grid input:focus,
+.plan-form-grid select:focus {
+  outline: none;
+  border-color: var(--neon);
+}
+
+.plan-goal-row {
+  display: flex;
+  gap: 8px;
+}
+
+.plan-goal-btn {
+  flex: 1;
+  background: #0d0d10;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.plan-goal-btn.active {
+  border-color: var(--neon);
+  color: var(--neon);
+  background: var(--neon-dim);
+}
+
+.plan-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plan-day-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.plan-day-label {
+  width: 36px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.plan-off-toggle {
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.plan-day-row input[type='time'] {
+  background: #0d0d10;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 6px 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.plan-day-sep {
+  color: var(--text-dim);
+}
+
+.plan-submit {
+  align-self: flex-start;
+  background: var(--neon);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: #0a0a0c;
+  cursor: pointer;
+}
+
+.plan-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.plan-error {
+  color: #ff3131;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.plan-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 12px;
+}
+
+.plan-stat-tile {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.plan-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--neon);
+  font-family: var(--mono);
+}
+
+.plan-stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+
+.plan-week {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.plan-day-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.plan-day-card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.plan-workout {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: var(--neon);
+  font-family: var(--mono);
+}
+
+.plan-workout-time {
+  color: var(--text-dim);
+}
+
+.plan-meals {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+
+.plan-meal-time {
+  color: var(--text);
+}
+
 .metric-list {
   display: flex;
   flex-direction: column;
