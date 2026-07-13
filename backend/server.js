@@ -127,18 +127,15 @@ app.delete('/api/entries/:id', (req, res) => {
 const { generatePlan } = require('./planGenerator');
 
 app.post('/api/plan', (req, res) => {
-  const { heightCm, age, sex, weightKg, bodyFatPercent, goal, activityLevel, schedule } = req.body;
-  if (!heightCm || !age || !sex || !weightKg || !goal) {
-    return res.status(400).json({ error: 'heightCm, age, sex, weightKg, and goal are required' });
+  const { heightCm, age, sex, weightKg, targetWeightKg, bodyFatPercent, activityLevel, schedule } = req.body;
+  if (!heightCm || !age || !sex || !weightKg || !targetWeightKg) {
+    return res.status(400).json({ error: 'heightCm, age, sex, weightKg, and targetWeightKg are required' });
   }
   if (!['male', 'female'].includes(sex)) {
     return res.status(400).json({ error: 'sex must be male or female' });
   }
-  if (!['cut', 'maintain', 'bulk'].includes(goal)) {
-    return res.status(400).json({ error: 'goal must be cut, maintain, or bulk' });
-  }
   try {
-    const plan = generatePlan({ heightCm, age, sex, weightKg, bodyFatPercent, goal, activityLevel, schedule });
+    const plan = generatePlan({ heightCm, age, sex, weightKg, targetWeightKg, bodyFatPercent, activityLevel, schedule });
     res.json(plan);
   } catch (e) {
     res.status(400).json({ error: e.message });

@@ -51,6 +51,16 @@ function targetCalories(tdeeValue, goal) {
   return tdeeValue * (1 + (GOAL_CALORIE_ADJUSTMENT[goal] ?? 0));
 }
 
+// Within 1kg of target counts as "maintain" - anything further out picks a
+// direction based on which way the user needs to move.
+const MAINTAIN_TOLERANCE_KG = 1;
+
+function deriveGoal(weightKg, targetWeightKg) {
+  const delta = targetWeightKg - weightKg;
+  if (Math.abs(delta) <= MAINTAIN_TOLERANCE_KG) return 'maintain';
+  return delta < 0 ? 'cut' : 'bulk';
+}
+
 function macros(calories, weightKg, goal) {
   const proteinG = Math.round((GOAL_PROTEIN_PER_KG[goal] ?? 2.0) * weightKg);
   const proteinCal = proteinG * 4;
@@ -101,7 +111,8 @@ function mealPlanForDay(day, calories, macroSplit) {
   }));
 }
 
-function generatePlan({ heightCm, age, sex, weightKg, bodyFatPercent, goal, activityLevel, schedule }) {
+function generatePlan({ heightCm, age, sex, weightKg, targetWeightKg, bodyFatPercent, activityLevel, schedule }) {
+  const goal = deriveGoal(weightKg, targetWeightKg);
   const bmrValue = bmr({ sex, weightKg, heightCm, age, bodyFatPercent });
   const tdeeValue = tdee(bmrValue, activityLevel);
   const calories = targetCalories(tdeeValue, goal);
@@ -134,6 +145,7 @@ function generatePlan({ heightCm, age, sex, weightKg, bodyFatPercent, goal, acti
     bmr: Math.round(bmrValue),
     tdee: Math.round(tdeeValue),
     targetCalories: Math.round(calories),
+    goal,
     macros: macroSplit,
     weekPlan,
   };
