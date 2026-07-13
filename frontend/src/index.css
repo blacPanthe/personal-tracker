@@ -144,29 +144,6 @@ body {
   border-color: var(--neon);
 }
 
-.plan-goal-row {
-  display: flex;
-  gap: 8px;
-}
-
-.plan-goal-btn {
-  flex: 1;
-  background: #0d0d10;
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  border-radius: 8px;
-  padding: 10px;
-  font-family: var(--mono);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.plan-goal-btn.active {
-  border-color: var(--neon);
-  color: var(--neon);
-  background: var(--neon-dim);
-}
-
 .plan-schedule {
   display: flex;
   flex-direction: column;

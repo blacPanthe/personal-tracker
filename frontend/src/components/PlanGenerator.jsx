@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { generatePlan } from '../api';
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const GOAL_LABELS = { cut: 'Fat loss', maintain: 'Maintain', bulk: 'Muscle gain' };
 
 const emptyDay = () => ({ isOff: false, workStart: '09:00', workEnd: '18:00' });
 
@@ -11,8 +12,8 @@ export default function PlanGenerator() {
     age: '',
     sex: 'male',
     weightKg: '',
+    targetWeightKg: '',
     bodyFatPercent: '',
-    goal: 'maintain',
     activityLevel: 'moderate',
   });
   const [schedule, setSchedule] = useState(
@@ -37,8 +38,8 @@ export default function PlanGenerator() {
         age: Number(profile.age),
         sex: profile.sex,
         weightKg: Number(profile.weightKg),
+        targetWeightKg: Number(profile.targetWeightKg),
         bodyFatPercent: profile.bodyFatPercent ? Number(profile.bodyFatPercent) : null,
-        goal: profile.goal,
         activityLevel: profile.activityLevel,
         schedule: schedule.map((d) => (d.isOff ? { isOff: true } : { workStart: d.workStart, workEnd: d.workEnd })),
       });
@@ -84,6 +85,15 @@ export default function PlanGenerator() {
             />
           </label>
           <label>
+            Target weight (kg)
+            <input
+              type="number"
+              required
+              value={profile.targetWeightKg}
+              onChange={(e) => updateField('targetWeightKg', e.target.value)}
+            />
+          </label>
+          <label>
             Body fat % (optional)
             <input
               type="number"
@@ -100,19 +110,6 @@ export default function PlanGenerator() {
               <option value="active">Very active</option>
             </select>
           </label>
-        </div>
-
-        <div className="plan-goal-row">
-          {['cut', 'maintain', 'bulk'].map((g) => (
-            <button
-              key={g}
-              type="button"
-              className={`plan-goal-btn${profile.goal === g ? ' active' : ''}`}
-              onClick={() => updateField('goal', g)}
-            >
-              {g === 'cut' ? 'Fat loss' : g === 'bulk' ? 'Muscle gain' : 'Maintain'}
-            </button>
-          ))}
         </div>
 
         <div className="plan-schedule">
@@ -155,6 +152,10 @@ export default function PlanGenerator() {
       {plan && (
         <div className="plan-results">
           <div className="plan-stats-row">
+            <div className="plan-stat-tile">
+              <span className="plan-stat-value">{GOAL_LABELS[plan.goal]}</span>
+              <span className="plan-stat-label">Goal</span>
+            </div>
             <div className="plan-stat-tile">
               <span className="plan-stat-value">{plan.bmr}</span>
               <span className="plan-stat-label">BMR (kcal)</span>
