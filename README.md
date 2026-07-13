@@ -1,6 +1,6 @@
 # Personal Tracker
 
-A GitHub-contribution-graph-style habit tracker: protein, water, steps, no-Instagram, no-porn,
+A GitHub-contribution-graph-style habit tracker: protein, water, steps, no-Instagram,
 sleep, workout, low screen time, reading, studying — each with its own color, dark background,
 neon-yellow accents.
 

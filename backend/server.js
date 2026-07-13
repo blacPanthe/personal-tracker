@@ -32,7 +32,6 @@ const defaultMetrics = [
   { key: 'water', name: 'Water', unit: 'ml', type: 'numeric', goal: 3000, color: '#00e5ff', sort_order: 2 },
   { key: 'steps', name: 'Steps', unit: 'steps', type: 'numeric', goal: 10000, color: '#ff6ec7', sort_order: 3 },
   { key: 'no_instagram', name: 'No Instagram', unit: null, type: 'boolean', goal: null, color: '#bd00ff', sort_order: 4 },
-  { key: 'no_porn', name: 'No Porn', unit: null, type: 'boolean', goal: null, color: '#ff3131', sort_order: 5 },
   { key: 'sleep', name: 'Sleep', unit: 'hrs', type: 'numeric', goal: 8, color: '#7c4dff', sort_order: 6 },
   { key: 'workout', name: 'Workout', unit: null, type: 'boolean', goal: null, color: '#ff9100', sort_order: 7 },
   { key: 'reading', name: 'Reading', unit: 'min', type: 'numeric', goal: 30, color: '#2bff88', sort_order: 9 },
