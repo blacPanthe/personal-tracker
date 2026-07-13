@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getMetrics, getEntriesSummary, upsertEntry } from './api';
 import MetricCard from './components/MetricCard';
-import PlanGenerator from './components/PlanGenerator';
+import PlanForm from './components/PlanForm';
+import { usePlanForm } from './hooks/usePlanForm';
 import { toLocalIso } from './heatmapUtils';
 
 function isoDaysAgo(days) {
@@ -15,6 +16,7 @@ export default function App() {
   const [metrics, setMetrics] = useState([]);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
+  const planForm = usePlanForm();
 
   useEffect(() => {
     Promise.all([getMetrics(), getEntriesSummary(isoDaysAgo(371), isoDaysAgo(0))])
@@ -59,12 +61,15 @@ export default function App() {
           >
             Trackers
           </button>
-          <button className={`app-tab${tab === 'plan' ? ' active' : ''}`} onClick={() => setTab('plan')}>
-            Meal & Workout Plan
+          <button className={`app-tab${tab === 'meals' ? ' active' : ''}`} onClick={() => setTab('meals')}>
+            Meal Plan
+          </button>
+          <button className={`app-tab${tab === 'workouts' ? ' active' : ''}`} onClick={() => setTab('workouts')}>
+            Workout Plan
           </button>
         </nav>
       </header>
-      {tab === 'trackers' ? (
+      {tab === 'trackers' && (
         <main className="metric-list">
           {metrics.map((metric) => (
             <MetricCard
@@ -75,9 +80,9 @@ export default function App() {
             />
           ))}
         </main>
-      ) : (
-        <PlanGenerator />
       )}
+      {tab === 'meals' && <PlanForm mode="meals" {...planForm} />}
+      {tab === 'workouts' && <PlanForm mode="workouts" {...planForm} />}
     </div>
   );
 }

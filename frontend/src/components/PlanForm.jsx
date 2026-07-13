@@ -1,12 +1,8 @@
-import { useState } from 'react';
-import { usePlanForm, DAY_LABELS } from '../hooks/usePlanForm';
+import { DAY_LABELS } from '../hooks/usePlanForm';
 
 const GOAL_LABELS = { cut: 'Fat loss', maintain: 'Maintain', bulk: 'Muscle gain' };
 
-export default function PlanGenerator() {
-  const { profile, schedule, plan, error, loading, updateField, updateDay, handleSubmit } = usePlanForm();
-  const [resultTab, setResultTab] = useState('meals');
-
+export default function PlanForm({ mode, profile, schedule, plan, error, loading, updateField, updateDay, handleSubmit }) {
   return (
     <div className="plan-page">
       <form className="plan-form" onSubmit={handleSubmit}>
@@ -138,23 +134,8 @@ export default function PlanGenerator() {
             </div>
           </div>
 
-          <nav className="app-tabs">
-            <button
-              className={`app-tab${resultTab === 'meals' ? ' active' : ''}`}
-              onClick={() => setResultTab('meals')}
-            >
-              Meal Plan
-            </button>
-            <button
-              className={`app-tab${resultTab === 'workouts' ? ' active' : ''}`}
-              onClick={() => setResultTab('workouts')}
-            >
-              Workout Plan
-            </button>
-          </nav>
-
           <div className="plan-week">
-            {resultTab === 'meals'
+            {mode === 'meals'
               ? plan.weekPlan.map((day) => (
                   <div className="plan-day-card" key={day.day}>
                     <h3>{day.day}</h3>
