@@ -22,6 +22,7 @@ export default function PlanGenerator() {
   const [plan, setPlan] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [resultTab, setResultTab] = useState('meals');
 
   const updateField = (field, value) => setProfile((p) => ({ ...p, [field]: value }));
 
@@ -182,24 +183,45 @@ export default function PlanGenerator() {
             </div>
           </div>
 
+          <nav className="app-tabs">
+            <button
+              className={`app-tab${resultTab === 'meals' ? ' active' : ''}`}
+              onClick={() => setResultTab('meals')}
+            >
+              Meal Plan
+            </button>
+            <button
+              className={`app-tab${resultTab === 'workouts' ? ' active' : ''}`}
+              onClick={() => setResultTab('workouts')}
+            >
+              Workout Plan
+            </button>
+          </nav>
+
           <div className="plan-week">
-            {plan.weekPlan.map((day) => (
-              <div className="plan-day-card" key={day.day}>
-                <h3>{day.day}</h3>
-                <p className="plan-workout">
-                  {day.workout.type}
-                  {day.workout.time && <span className="plan-workout-time"> · {day.workout.time}</span>}
-                </p>
-                <ul className="plan-meals">
-                  {day.meals.map((meal) => (
-                    <li key={meal.label}>
-                      <span className="plan-meal-time">{meal.time}</span> {meal.label} — {meal.approxCalories} kcal,{' '}
-                      {meal.approxProteinG}g protein
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {resultTab === 'meals'
+              ? plan.weekPlan.map((day) => (
+                  <div className="plan-day-card" key={day.day}>
+                    <h3>{day.day}</h3>
+                    <ul className="plan-meals">
+                      {day.meals.map((meal) => (
+                        <li key={meal.label}>
+                          <span className="plan-meal-time">{meal.time}</span> {meal.label} — {meal.approxCalories}{' '}
+                          kcal, {meal.approxProteinG}g protein
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              : plan.weekPlan.map((day) => (
+                  <div className="plan-day-card" key={day.day}>
+                    <h3>{day.day}</h3>
+                    <p className="plan-workout">
+                      {day.workout.type}
+                      {day.workout.time && <span className="plan-workout-time"> · {day.workout.time}</span>}
+                    </p>
+                  </div>
+                ))}
           </div>
         </div>
       )}
