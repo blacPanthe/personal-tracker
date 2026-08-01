@@ -17,7 +17,7 @@ const FEATURES = [
   },
 ];
 
-export default function Landing({ onGetStarted }) {
+export default function Landing({ onGetStarted, onSignIn }) {
   return (
     <div className="landing">
       <section className="landing-hero">
@@ -28,9 +28,14 @@ export default function Landing({ onGetStarted }) {
           One profile, a full set of habit trackers, and meal + workout plans generated from your own stats and
           schedule — all in one place.
         </p>
-        <button type="button" className="landing-cta" onClick={onGetStarted}>
-          Get started
-        </button>
+        <div className="landing-cta-row">
+          <button type="button" className="landing-cta" onClick={onGetStarted}>
+            Get started
+          </button>
+          <button type="button" className="landing-signin" onClick={onSignIn}>
+            Sign in
+          </button>
+        </div>
       </section>
 
       <section className="landing-features">

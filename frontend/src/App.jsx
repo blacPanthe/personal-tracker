@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { getMetrics, getEntriesSummary, upsertEntry } from './api';
 import MetricCard from './components/MetricCard';
 import Landing from './components/Landing';
+import AuthForm from './components/AuthForm';
 import ProfileForm from './components/ProfileForm';
 import PlanResults from './components/PlanResults';
 import { usePlanForm } from './hooks/usePlanForm';
+import { useAuth } from './hooks/useAuth';
 import { toLocalIso } from './heatmapUtils';
 
 function isoDaysAgo(days) {
@@ -14,20 +16,24 @@ function isoDaysAgo(days) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState('landing');
+  const auth = useAuth();
+  const [authView, setAuthView] = useState('landing');
+  const [tab, setTab] = useState('profile');
   const [metrics, setMetrics] = useState([]);
   const [entries, setEntries] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
   const planForm = usePlanForm();
 
   useEffect(() => {
+    if (!auth.user) return;
+    setDataLoading(true);
     Promise.all([getMetrics(), getEntriesSummary(isoDaysAgo(371), isoDaysAgo(0))])
       .then(([m, e]) => {
         setMetrics(m);
         setEntries(e);
       })
-      .finally(() => setLoading(false));
-  }, []);
+      .finally(() => setDataLoading(false));
+  }, [auth.user]);
 
   const entryMapsByMetric = useMemo(() => {
     const map = {};
@@ -47,14 +53,27 @@ export default function App() {
     });
   };
 
-  if (loading) return <div className="loading">Loading…</div>;
+  if (auth.checking) return <div className="loading">Loading…</div>;
 
-  if (tab === 'landing') return <Landing onGetStarted={() => setTab('profile')} />;
+  if (!auth.user) {
+    if (authView === 'landing') {
+      return <Landing onGetStarted={() => setAuthView('signup')} onSignIn={() => setAuthView('signin')} />;
+    }
+    return (
+      <AuthForm
+        mode={authView}
+        onSubmit={authView === 'signup' ? auth.signUp : auth.signIn}
+        onSwitchMode={() => setAuthView(authView === 'signup' ? 'signin' : 'signup')}
+      />
+    );
+  }
+
+  if (dataLoading) return <div className="loading">Loading…</div>;
 
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-logo" onClick={() => setTab('landing')}>
+        <h1>
           Personal <span className="accent">Tracker</span>
         </h1>
         <p>Your habits, mapped like commits.</p>
@@ -73,6 +92,9 @@ export default function App() {
           </button>
           <button className={`app-tab${tab === 'workouts' ? ' active' : ''}`} onClick={() => setTab('workouts')}>
             Workout Plan
+          </button>
+          <button className="app-tab" onClick={auth.signOut}>
+            Sign out
           </button>
         </nav>
       </header>
