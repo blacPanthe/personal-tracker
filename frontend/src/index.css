@@ -604,13 +604,52 @@ body {
 
 .auth-form {
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
+  gap: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
 }
 
 .auth-form h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
   color: var(--text);
+  text-align: center;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-form input {
+  background: #0d0d10;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: var(--sans);
+  width: 100%;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--neon);
+  box-shadow: 0 0 0 3px var(--neon-dim);
+}
+
+.auth-form .plan-submit {
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 8px;
 }
 
 .auth-switch {
@@ -618,4 +657,5 @@ body {
   color: var(--text-dim);
   font-family: var(--mono);
   font-size: 13px;
+  text-align: center;
 }
