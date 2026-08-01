@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function AuthForm({ mode, onSubmit, onSwitchMode }) {
+export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -24,6 +24,9 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode }) {
   return (
     <div className="auth-page">
       <form className="plan-form auth-form" onSubmit={handleSubmit}>
+        <button type="button" className="auth-close" onClick={onClose} aria-label="Close">
+          ×
+        </button>
         <h2>{isSignUp ? 'Create your account' : 'Sign in'}</h2>
         <label>
           Email

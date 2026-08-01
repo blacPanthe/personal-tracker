@@ -64,6 +64,7 @@ export default function App() {
         mode={authView}
         onSubmit={authView === 'signup' ? auth.signUp : auth.signIn}
         onSwitchMode={() => setAuthView(authView === 'signup' ? 'signin' : 'signup')}
+        onClose={() => setAuthView('landing')}
       />
     );
   }
