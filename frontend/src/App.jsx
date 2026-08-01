@@ -74,12 +74,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <div className="app-brand">
-          <img src="/favicon.svg" alt="" className="app-brand-mark" width={32} height={32} />
-          <h1>
-            Base<span className="accent">line</span>
-          </h1>
-        </div>
+        <img src="/logo-wordmark.svg" alt="Baseline" className="app-brand-mark" width={200} height={60} />
         <p>Your habits, mapped like commits.</p>
         <nav className="app-tabs">
           <button className={`app-tab${tab === 'profile' ? ' active' : ''}`} onClick={() => setTab('profile')}>
