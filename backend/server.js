@@ -2,20 +2,44 @@ const express = require('express');
 const cors = require('cors');
 const Database = require('better-sqlite3');
 const path = require('path');
+const { hashPassword, verifyPassword, generateToken, requireAuth } = require('./auth');
 
 const db = new Database(path.join(__dirname, 'tracker.db'));
 db.pragma('journal_mode = WAL');
 
+// Metrics used to belong to a single global user. Multi-account support needs
+// each metric scoped to its owner, which isn't a compatible schema change -
+// rebuild from scratch rather than trying to migrate old single-user rows.
+const hasUserScopedMetrics = db.prepare("PRAGMA table_info(metrics)").all().some((c) => c.name === 'user_id');
+if (!hasUserScopedMetrics) {
+  db.exec('DROP TABLE IF EXISTS entries; DROP TABLE IF EXISTS metrics;');
+}
+
 db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE IF NOT EXISTS sessions (
+    token TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
   CREATE TABLE IF NOT EXISTS metrics (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    key TEXT UNIQUE NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    key TEXT NOT NULL,
     name TEXT NOT NULL,
     unit TEXT,
     type TEXT NOT NULL CHECK(type IN ('numeric', 'boolean')),
     goal REAL,
     color TEXT NOT NULL,
-    sort_order INTEGER DEFAULT 0
+    sort_order INTEGER DEFAULT 0,
+    UNIQUE(user_id, key)
   );
 
   CREATE TABLE IF NOT EXISTS entries (
@@ -40,24 +64,63 @@ const defaultMetrics = [
 ];
 
 const insertMetric = db.prepare(`
-  INSERT OR IGNORE INTO metrics (key, name, unit, type, goal, color, sort_order)
-  VALUES (@key, @name, @unit, @type, @goal, @color, @sort_order)
+  INSERT INTO metrics (user_id, key, name, unit, type, goal, color, sort_order)
+  VALUES (@user_id, @key, @name, @unit, @type, @goal, @color, @sort_order)
 `);
-const seedTx = db.transaction((metrics) => {
-  for (const m of metrics) insertMetric.run(m);
+const seedDefaultMetricsForUser = db.transaction((userId) => {
+  for (const m of defaultMetrics) insertMetric.run({ ...m, user_id: userId });
 });
-seedTx(defaultMetrics);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/metrics', (req, res) => {
-  const metrics = db.prepare('SELECT * FROM metrics ORDER BY sort_order, id').all();
+app.post('/api/auth/signup', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'email and password are required' });
+  if (password.length < 8) return res.status(400).json({ error: 'password must be at least 8 characters' });
+
+  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+  if (existing) return res.status(409).json({ error: 'email already registered' });
+
+  const info = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email, hashPassword(password));
+  seedDefaultMetricsForUser(info.lastInsertRowid);
+
+  const token = generateToken();
+  db.prepare('INSERT INTO sessions (token, user_id) VALUES (?, ?)').run(token, info.lastInsertRowid);
+  res.status(201).json({ token, user: { id: info.lastInsertRowid, email } });
+});
+
+app.post('/api/auth/signin', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'email and password are required' });
+
+  const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+  if (!user || !verifyPassword(password, user.password_hash)) {
+    return res.status(401).json({ error: 'invalid email or password' });
+  }
+
+  const token = generateToken();
+  db.prepare('INSERT INTO sessions (token, user_id) VALUES (?, ?)').run(token, user.id);
+  res.json({ token, user: { id: user.id, email: user.email } });
+});
+
+app.post('/api/auth/signout', requireAuth(db), (req, res) => {
+  db.prepare('DELETE FROM sessions WHERE token = ?').run(req.get('authorization').slice(7));
+  res.status(204).end();
+});
+
+app.get('/api/auth/me', requireAuth(db), (req, res) => {
+  const user = db.prepare('SELECT id, email FROM users WHERE id = ?').get(req.userId);
+  res.json({ user });
+});
+
+app.get('/api/metrics', requireAuth(db), (req, res) => {
+  const metrics = db.prepare('SELECT * FROM metrics WHERE user_id = ? ORDER BY sort_order, id').all(req.userId);
   res.json(metrics);
 });
 
-app.post('/api/metrics', (req, res) => {
+app.post('/api/metrics', requireAuth(db), (req, res) => {
   const { key, name, unit, type, goal, color, sort_order } = req.body;
   if (!key || !name || !type || !color) {
     return res.status(400).json({ error: 'key, name, type, color are required' });
@@ -67,9 +130,9 @@ app.post('/api/metrics', (req, res) => {
   }
   try {
     const info = db.prepare(`
-      INSERT INTO metrics (key, name, unit, type, goal, color, sort_order)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(key, name, unit || null, type, goal ?? null, color, sort_order ?? 0);
+      INSERT INTO metrics (user_id, key, name, unit, type, goal, color, sort_order)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(req.userId, key, name, unit || null, type, goal ?? null, color, sort_order ?? 0);
     const metric = db.prepare('SELECT * FROM metrics WHERE id = ?').get(info.lastInsertRowid);
     res.status(201).json(metric);
   } catch (e) {
@@ -77,15 +140,17 @@ app.post('/api/metrics', (req, res) => {
   }
 });
 
-app.delete('/api/metrics/:id', (req, res) => {
-  db.prepare('DELETE FROM metrics WHERE id = ?').run(req.params.id);
+app.delete('/api/metrics/:id', requireAuth(db), (req, res) => {
+  db.prepare('DELETE FROM metrics WHERE id = ? AND user_id = ?').run(req.params.id, req.userId);
   res.status(204).end();
 });
 
 // Entries for a single metric, optionally bounded by date range (YYYY-MM-DD)
-app.get('/api/entries', (req, res) => {
+app.get('/api/entries', requireAuth(db), (req, res) => {
   const { metric_id, from, to } = req.query;
   if (!metric_id) return res.status(400).json({ error: 'metric_id is required' });
+  const metric = db.prepare('SELECT id FROM metrics WHERE id = ? AND user_id = ?').get(metric_id, req.userId);
+  if (!metric) return res.status(404).json({ error: 'metric not found' });
   let query = 'SELECT * FROM entries WHERE metric_id = ?';
   const params = [metric_id];
   if (from) { query += ' AND date >= ?'; params.push(from); }
@@ -95,21 +160,23 @@ app.get('/api/entries', (req, res) => {
 });
 
 // All entries for all metrics within a date range - used to render the full grid in one call
-app.get('/api/entries/summary', (req, res) => {
+app.get('/api/entries/summary', requireAuth(db), (req, res) => {
   const { from, to } = req.query;
-  let query = 'SELECT * FROM entries WHERE 1=1';
-  const params = [];
+  let query = 'SELECT entries.* FROM entries JOIN metrics ON metrics.id = entries.metric_id WHERE metrics.user_id = ?';
+  const params = [req.userId];
   if (from) { query += ' AND date >= ?'; params.push(from); }
   if (to) { query += ' AND date <= ?'; params.push(to); }
   res.json(db.prepare(query).all(...params));
 });
 
 // Upsert today's (or any date's) value for a metric
-app.post('/api/entries', (req, res) => {
+app.post('/api/entries', requireAuth(db), (req, res) => {
   const { metric_id, date, value } = req.body;
   if (!metric_id || !date || value === undefined) {
     return res.status(400).json({ error: 'metric_id, date, value are required' });
   }
+  const metric = db.prepare('SELECT id FROM metrics WHERE id = ? AND user_id = ?').get(metric_id, req.userId);
+  if (!metric) return res.status(404).json({ error: 'metric not found' });
   db.prepare(`
     INSERT INTO entries (metric_id, date, value)
     VALUES (?, ?, ?)
@@ -119,8 +186,10 @@ app.post('/api/entries', (req, res) => {
   res.status(200).json(entry);
 });
 
-app.delete('/api/entries/:id', (req, res) => {
-  db.prepare('DELETE FROM entries WHERE id = ?').run(req.params.id);
+app.delete('/api/entries/:id', requireAuth(db), (req, res) => {
+  db.prepare(`
+    DELETE FROM entries WHERE id = ? AND metric_id IN (SELECT id FROM metrics WHERE user_id = ?)
+  `).run(req.params.id, req.userId);
   res.status(204).end();
 });
 
