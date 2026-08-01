@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getMetrics, getEntriesSummary, upsertEntry } from './api';
 import MetricCard from './components/MetricCard';
-import PlanForm from './components/PlanForm';
+import ProfileForm from './components/ProfileForm';
+import PlanResults from './components/PlanResults';
 import { usePlanForm } from './hooks/usePlanForm';
 import { toLocalIso } from './heatmapUtils';
 
@@ -12,7 +13,7 @@ function isoDaysAgo(days) {
 }
 
 export default function App() {
-  const [tab, setTab] = useState('trackers');
+  const [tab, setTab] = useState('profile');
   const [metrics, setMetrics] = useState([]);
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +56,9 @@ export default function App() {
         </h1>
         <p>Your habits, mapped like commits.</p>
         <nav className="app-tabs">
+          <button className={`app-tab${tab === 'profile' ? ' active' : ''}`} onClick={() => setTab('profile')}>
+            Profile
+          </button>
           <button
             className={`app-tab${tab === 'trackers' ? ' active' : ''}`}
             onClick={() => setTab('trackers')}
@@ -69,6 +73,7 @@ export default function App() {
           </button>
         </nav>
       </header>
+      {tab === 'profile' && <ProfileForm {...planForm} />}
       {tab === 'trackers' && (
         <main className="metric-list">
           {metrics.map((metric) => (
@@ -81,8 +86,10 @@ export default function App() {
           ))}
         </main>
       )}
-      {tab === 'meals' && <PlanForm mode="meals" {...planForm} />}
-      {tab === 'workouts' && <PlanForm mode="workouts" {...planForm} />}
+      {tab === 'meals' && <PlanResults mode="meals" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />}
+      {tab === 'workouts' && (
+        <PlanResults mode="workouts" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />
+      )}
     </div>
   );
 }

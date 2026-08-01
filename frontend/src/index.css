@@ -206,6 +206,23 @@ body {
   font-size: 13px;
 }
 
+.plan-empty {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.plan-empty-link {
+  background: none;
+  border: none;
+  color: var(--neon);
+  font-family: var(--mono);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
 .plan-stats-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
