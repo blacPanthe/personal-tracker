@@ -7,6 +7,7 @@ const emptyDay = () => ({ isOff: false, workStart: '09:00', workEnd: '18:00' });
 
 export function usePlanForm() {
   const [profile, setProfile] = useState({
+    name: '',
     heightCm: '',
     age: '',
     sex: 'male',
@@ -14,6 +15,9 @@ export function usePlanForm() {
     targetWeightKg: '',
     bodyFatPercent: '',
     activityLevel: 'moderate',
+    medicalHistory: '',
+    allergies: '',
+    injuries: '',
   });
   const [schedule, setSchedule] = useState(
     DAY_LABELS.map((_, i) => (i === 0 || i === 6 ? { ...emptyDay(), isOff: true } : emptyDay()))

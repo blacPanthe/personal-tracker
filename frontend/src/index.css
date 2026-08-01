@@ -150,6 +150,37 @@ body {
   gap: 8px;
 }
 
+.plan-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.plan-notes label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+
+.plan-notes textarea {
+  background: #0d0d10;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: var(--mono);
+  resize: vertical;
+}
+
+.plan-notes textarea:focus {
+  outline: none;
+  border-color: var(--neon);
+}
+
 .plan-day-row {
   flex-direction: row;
   align-items: center;

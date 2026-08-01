@@ -6,6 +6,10 @@ export default function ProfileForm({ profile, schedule, error, loading, updateF
       <form className="plan-form" onSubmit={handleSubmit}>
         <div className="plan-form-grid">
           <label>
+            Name
+            <input type="text" value={profile.name} onChange={(e) => updateField('name', e.target.value)} />
+          </label>
+          <label>
             Height (cm)
             <input
               type="number"
@@ -91,6 +95,25 @@ export default function ProfileForm({ profile, schedule, error, loading, updateF
               )}
             </div>
           ))}
+        </div>
+
+        <div className="plan-notes">
+          <label>
+            Medical history (conditions, medications, etc.)
+            <textarea
+              rows={3}
+              value={profile.medicalHistory}
+              onChange={(e) => updateField('medicalHistory', e.target.value)}
+            />
+          </label>
+          <label>
+            Allergies / dietary restrictions
+            <textarea rows={2} value={profile.allergies} onChange={(e) => updateField('allergies', e.target.value)} />
+          </label>
+          <label>
+            Injuries / physical limitations
+            <textarea rows={2} value={profile.injuries} onChange={(e) => updateField('injuries', e.target.value)} />
+          </label>
         </div>
 
         <button type="submit" className="plan-submit" disabled={loading}>
