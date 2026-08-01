@@ -16,5 +16,9 @@
     font-family="'Budapest', cursive"
     font-size="52"
     fill="#eaff00"
+    stroke="#eaff00"
+    stroke-width="3"
+    paint-order="stroke fill"
+    stroke-linejoin="round"
   >Baseline</text>
 </svg>
