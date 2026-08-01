@@ -21,6 +21,7 @@ export default function Landing({ onGetStarted, onSignIn }) {
   return (
     <div className="landing">
       <section className="landing-hero">
+        <img src="/favicon.svg" alt="Baseline" className="landing-mark" width={56} height={56} />
         <h1>
           Train smarter. <span className="accent">Track everything.</span>
         </h1>
