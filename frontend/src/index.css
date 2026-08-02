@@ -46,16 +46,7 @@ body {
 .app {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 48px 24px 96px;
-}
-
-.app-header {
-  margin-bottom: 40px;
-}
-
-.app-brand-mark {
-  border-radius: 10px;
-  margin-bottom: 8px;
+  padding: 40px 24px 96px;
 }
 
 .landing-hero .accent {
@@ -63,33 +54,70 @@ body {
   text-shadow: 0 0 18px var(--neon-dim);
 }
 
-.app-header p {
-  margin: 0;
-  color: var(--text-dim);
-  font-family: var(--mono);
-  font-size: 14px;
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
 }
 
-.app-tabs {
+.navbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 12px 24px;
   display: flex;
-  gap: 8px;
-  margin-top: 24px;
+  align-items: center;
+  gap: 24px;
 }
 
-.app-tab {
+.navbar-brand-mark {
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.navbar-link {
   background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-dim);
+  border: none;
   border-radius: 8px;
-  padding: 8px 16px;
+  color: var(--text-dim);
+  padding: 8px 14px;
   font-family: var(--mono);
   font-size: 13px;
   cursor: pointer;
 }
 
-.app-tab.active {
-  border-color: var(--neon);
-  color: var(--neon);
+.navbar-link:hover {
+  color: var(--text);
+}
+
+.navbar-link.active {
+  color: #0a0a0c;
+  background: var(--neon);
+  font-weight: 700;
+}
+
+.navbar-signout {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.navbar-signout:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
 }
 
 .plan-page {

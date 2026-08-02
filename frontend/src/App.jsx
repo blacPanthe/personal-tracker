@@ -74,48 +74,56 @@ export default function App() {
   if (dataLoading) return <div className="loading">Loading…</div>;
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <img src="/logo-wordmark.svg" alt="Baseline" className="app-brand-mark" width={200} height={60} />
-        <p>Your habits, mapped like commits.</p>
-        <nav className="app-tabs">
-          <button className={`app-tab${tab === 'profile' ? ' active' : ''}`} onClick={() => setTab('profile')}>
-            Profile
-          </button>
-          <button
-            className={`app-tab${tab === 'trackers' ? ' active' : ''}`}
-            onClick={() => setTab('trackers')}
-          >
-            Trackers
-          </button>
-          <button className={`app-tab${tab === 'meals' ? ' active' : ''}`} onClick={() => setTab('meals')}>
-            Meal Plan
-          </button>
-          <button className={`app-tab${tab === 'workouts' ? ' active' : ''}`} onClick={() => setTab('workouts')}>
-            Workout Plan
-          </button>
-          <button className="app-tab" onClick={auth.signOut}>
+    <>
+      <nav className="navbar">
+        <div className="navbar-inner">
+          <img src="/logo-wordmark.svg" alt="Baseline" className="navbar-brand-mark" width={120} height={36} />
+          <div className="navbar-links">
+            <button className={`navbar-link${tab === 'profile' ? ' active' : ''}`} onClick={() => setTab('profile')}>
+              Profile
+            </button>
+            <button
+              className={`navbar-link${tab === 'trackers' ? ' active' : ''}`}
+              onClick={() => setTab('trackers')}
+            >
+              Trackers
+            </button>
+            <button className={`navbar-link${tab === 'meals' ? ' active' : ''}`} onClick={() => setTab('meals')}>
+              Meal Plan
+            </button>
+            <button
+              className={`navbar-link${tab === 'workouts' ? ' active' : ''}`}
+              onClick={() => setTab('workouts')}
+            >
+              Workout Plan
+            </button>
+          </div>
+          <button className="navbar-signout" onClick={auth.signOut}>
             Sign out
           </button>
-        </nav>
-      </header>
-      {tab === 'profile' && <ProfileForm {...planForm} />}
-      {tab === 'trackers' && (
-        <main className="metric-list">
-          {metrics.map((metric) => (
-            <MetricCard
-              key={metric.id}
-              metric={metric}
-              entryMap={entryMapsByMetric[metric.id] || {}}
-              onLog={handleLog}
-            />
-          ))}
-        </main>
-      )}
-      {tab === 'meals' && <PlanResults mode="meals" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />}
-      {tab === 'workouts' && (
-        <PlanResults mode="workouts" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />
-      )}
-    </div>
+        </div>
+      </nav>
+      <div className="app">
+        {tab === 'profile' && <ProfileForm {...planForm} />}
+        {tab === 'trackers' && (
+          <main className="metric-list">
+            {metrics.map((metric) => (
+              <MetricCard
+                key={metric.id}
+                metric={metric}
+                entryMap={entryMapsByMetric[metric.id] || {}}
+                onLog={handleLog}
+              />
+            ))}
+          </main>
+        )}
+        {tab === 'meals' && (
+          <PlanResults mode="meals" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />
+        )}
+        {tab === 'workouts' && (
+          <PlanResults mode="workouts" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />
+        )}
+      </div>
+    </>
   );
 }
