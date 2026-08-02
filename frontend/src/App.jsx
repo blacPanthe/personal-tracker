@@ -4,6 +4,7 @@ import MetricCard from './components/MetricCard';
 import Landing from './components/Landing';
 import AuthForm from './components/AuthForm';
 import ProfileForm from './components/ProfileForm';
+import UserMenu from './components/UserMenu';
 import PlanResults from './components/PlanResults';
 import { usePlanForm } from './hooks/usePlanForm';
 import { useAuth } from './hooks/useAuth';
@@ -98,9 +99,7 @@ export default function App() {
               Workout Plan
             </button>
           </div>
-          <button className="navbar-signout" onClick={auth.signOut}>
-            Sign out
-          </button>
+          <UserMenu email={auth.user.email} onProfile={() => setTab('profile')} onSignOut={auth.signOut} />
         </div>
       </nav>
       <div className="app">

@@ -103,21 +103,112 @@ body {
   font-weight: 700;
 }
 
-.navbar-signout {
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-dim);
-  padding: 8px 14px;
-  font-family: var(--mono);
-  font-size: 13px;
-  cursor: pointer;
+.user-menu {
+  position: relative;
   flex-shrink: 0;
 }
 
-.navbar-signout:hover {
-  color: var(--text);
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0d0d10;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+  cursor: pointer;
+}
+
+.user-menu-trigger:hover {
   border-color: var(--text-dim);
+}
+
+.user-menu-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--neon);
+  color: #0a0a0c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.user-menu-email {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-menu-chevron {
+  color: var(--text-dim);
+  font-size: 14px;
+  transition: transform 0.15s ease;
+}
+
+.user-menu-chevron.open {
+  transform: rotate(180deg);
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  z-index: 30;
+}
+
+.user-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.user-menu-item:hover {
+  background: #0d0d10;
+}
+
+.user-menu-item--danger {
+  color: #ff3131;
+}
+
+.user-menu-icon {
+  width: 16px;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.user-menu-item--danger .user-menu-icon {
+  color: #ff3131;
+}
+
+.user-menu-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 4px;
 }
 
 .plan-page {
