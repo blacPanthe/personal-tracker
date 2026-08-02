@@ -16,9 +16,5 @@
     font-family="'Budapest', cursive"
     font-size="42"
     fill="#eaff00"
-    stroke="#eaff00"
-    stroke-width="3"
-    paint-order="stroke fill"
-    stroke-linejoin="round"
   >B</text>
 </svg>
