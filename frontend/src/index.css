@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'Budapest';
+  src: url('/fonts/Budapest.ttf') format('truetype');
+  font-display: swap;
+}
+
 :root {
   --bg: #0a0a0c;
   --bg-card: #131316;
@@ -9,6 +15,7 @@
 
   --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+  --script: 'Budapest', cursive;
 
   font: 16px/1.5 var(--sans);
   color-scheme: dark;
@@ -640,9 +647,10 @@ body {
 }
 
 .landing-hero h1 {
-  font-size: 56px;
-  font-weight: 700;
-  letter-spacing: -1.5px;
+  font-family: var(--script);
+  font-size: 64px;
+  font-weight: 400;
+  letter-spacing: 0;
   margin: 0 0 20px;
   color: var(--text);
 }
@@ -651,8 +659,8 @@ body {
   max-width: 560px;
   margin: 0 auto 32px;
   color: var(--text-dim);
-  font-family: var(--mono);
-  font-size: 15px;
+  font-family: var(--script);
+  font-size: 22px;
 }
 
 .landing-cta-row {
@@ -666,9 +674,8 @@ body {
   border: none;
   border-radius: 8px;
   padding: 14px 32px;
-  font-weight: 700;
-  font-family: var(--mono);
-  font-size: 14px;
+  font-family: var(--script);
+  font-size: 20px;
   color: #0a0a0c;
   cursor: pointer;
 }
@@ -678,9 +685,8 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 14px 32px;
-  font-weight: 700;
-  font-family: var(--mono);
-  font-size: 14px;
+  font-family: var(--script);
+  font-size: 20px;
   color: var(--text);
   cursor: pointer;
 }
@@ -702,15 +708,17 @@ body {
 
 .landing-feature-card h3 {
   margin: 0 0 8px;
-  font-size: 15px;
+  font-family: var(--script);
+  font-size: 22px;
+  font-weight: 400;
   color: var(--neon);
 }
 
 .landing-feature-card p {
   margin: 0;
   color: var(--text-dim);
-  font-family: var(--mono);
-  font-size: 13px;
+  font-family: var(--script);
+  font-size: 17px;
   line-height: 1.5;
 }
 
