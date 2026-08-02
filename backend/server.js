@@ -15,9 +15,17 @@ if (!hasUserScopedMetrics) {
   db.exec('DROP TABLE IF EXISTS entries; DROP TABLE IF EXISTS metrics;');
 }
 
+// Same story for adding a name to accounts that were created before this
+// column existed - rebuild rather than migrate in place.
+const hasUserName = db.prepare("PRAGMA table_info(users)").all().some((c) => c.name === 'name');
+if (!hasUserName) {
+  db.exec('DROP TABLE IF EXISTS sessions; DROP TABLE IF EXISTS users;');
+}
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -76,19 +84,21 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/api/auth/signup', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: 'email and password are required' });
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) return res.status(400).json({ error: 'name, email, and password are required' });
   if (password.length < 8) return res.status(400).json({ error: 'password must be at least 8 characters' });
 
   const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
   if (existing) return res.status(409).json({ error: 'email already registered' });
 
-  const info = db.prepare('INSERT INTO users (email, password_hash) VALUES (?, ?)').run(email, hashPassword(password));
+  const info = db
+    .prepare('INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)')
+    .run(name, email, hashPassword(password));
   seedDefaultMetricsForUser(info.lastInsertRowid);
 
   const token = generateToken();
   db.prepare('INSERT INTO sessions (token, user_id) VALUES (?, ?)').run(token, info.lastInsertRowid);
-  res.status(201).json({ token, user: { id: info.lastInsertRowid, email } });
+  res.status(201).json({ token, user: { id: info.lastInsertRowid, name, email } });
 });
 
 app.post('/api/auth/signin', (req, res) => {
@@ -102,7 +112,7 @@ app.post('/api/auth/signin', (req, res) => {
 
   const token = generateToken();
   db.prepare('INSERT INTO sessions (token, user_id) VALUES (?, ?)').run(token, user.id);
-  res.json({ token, user: { id: user.id, email: user.email } });
+  res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
 });
 
 app.post('/api/auth/signout', requireAuth(db), (req, res) => {
@@ -111,7 +121,7 @@ app.post('/api/auth/signout', requireAuth(db), (req, res) => {
 });
 
 app.get('/api/auth/me', requireAuth(db), (req, res) => {
-  const user = db.prepare('SELECT id, email FROM users WHERE id = ?').get(req.userId);
+  const user = db.prepare('SELECT id, name, email FROM users WHERE id = ?').get(req.userId);
   res.json({ user });
 });
 
