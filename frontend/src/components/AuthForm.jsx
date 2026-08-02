@@ -3,6 +3,7 @@ import { useState } from 'react';
 export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(true);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -13,7 +14,7 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
     setError(null);
     setLoading(true);
     try {
-      await onSubmit(email, password);
+      await onSubmit(email, password, remember);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -22,37 +23,67 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
   };
 
   return (
-    <div className="auth-page">
-      <form className="plan-form auth-form" onSubmit={handleSubmit}>
+    <div className="auth-overlay" onClick={onClose}>
+      <div className="auth-card" onClick={(e) => e.stopPropagation()}>
         <button type="button" className="auth-close" onClick={onClose} aria-label="Close">
           ×
         </button>
-        <h2>{isSignUp ? 'Create your account' : 'Sign in'}</h2>
-        <label>
-          Email
-          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <label>
-          Password
+
+        <img src="/logo-wordmark.svg" alt="Baseline" className="auth-brand-mark" width={160} height={48} />
+
+        <div className="auth-tabs">
+          <button
+            type="button"
+            className={`auth-tab${!isSignUp ? ' active' : ''}`}
+            onClick={() => !isSignUp || onSwitchMode()}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            className={`auth-tab${isSignUp ? ' active' : ''}`}
+            onClick={() => isSignUp || onSwitchMode()}
+          >
+            Create Account
+          </button>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h2>{isSignUp ? 'Create your account' : 'Welcome back'}</h2>
+          <p className="auth-subtext">
+            {isSignUp ? 'Sign up to start tracking with Baseline.' : 'Sign in to access your Baseline account.'}
+          </p>
+
+          <input
+            type="email"
+            placeholder="Email address"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <input
             type="password"
+            placeholder="Password"
             required
             minLength={isSignUp ? 8 : undefined}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </label>
-        <button type="submit" className="plan-submit" disabled={loading}>
-          {loading ? 'Please wait…' : isSignUp ? 'Sign up' : 'Sign in'}
-        </button>
-        {error && <p className="plan-error">{error}</p>}
-        <p className="auth-switch">
-          {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button type="button" className="plan-empty-link" onClick={onSwitchMode}>
-            {isSignUp ? 'Sign in' : 'Sign up'}
+
+          <label className="auth-remember">
+            <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+            Keep me logged in
+          </label>
+
+          <button type="submit" className="auth-submit" disabled={loading}>
+            {loading ? 'Please wait…' : isSignUp ? 'Sign up →' : 'Sign in →'}
           </button>
-        </p>
-      </form>
+
+          {error && <p className="plan-error">{error}</p>}
+
+          <p className="auth-footer">By continuing you agree to Baseline's Privacy Policy.</p>
+        </form>
+      </div>
     </div>
   );
 }

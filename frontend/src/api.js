@@ -2,12 +2,16 @@ const API_BASE = '/api';
 const TOKEN_KEY = 'pt_token';
 
 export function getToken() {
-  return localStorage.getItem(TOKEN_KEY);
+  return localStorage.getItem(TOKEN_KEY) || sessionStorage.getItem(TOKEN_KEY);
 }
 
-function setToken(token) {
-  if (token) localStorage.setItem(TOKEN_KEY, token);
-  else localStorage.removeItem(TOKEN_KEY);
+// "Keep me logged in" controls which storage the token lands in - localStorage
+// survives browser restarts, sessionStorage clears when the tab/browser closes.
+function setToken(token, remember = true) {
+  localStorage.removeItem(TOKEN_KEY);
+  sessionStorage.removeItem(TOKEN_KEY);
+  if (!token) return;
+  (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, token);
 }
 
 async function request(path, options = {}) {
@@ -23,23 +27,23 @@ async function requestJson(path, options) {
   return res.json();
 }
 
-export async function signUp(email, password) {
+export async function signUp(email, password, remember = true) {
   const result = await requestJson('/auth/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  setToken(result.token);
+  setToken(result.token, remember);
   return result.user;
 }
 
-export async function signIn(email, password) {
+export async function signIn(email, password, remember = true) {
   const result = await requestJson('/auth/signin', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  setToken(result.token);
+  setToken(result.token, remember);
   return result.user;
 }
 

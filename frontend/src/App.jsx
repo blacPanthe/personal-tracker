@@ -56,16 +56,18 @@ export default function App() {
   if (auth.checking) return <div className="loading">Loading…</div>;
 
   if (!auth.user) {
-    if (authView === 'landing') {
-      return <Landing onGetStarted={() => setAuthView('signup')} onSignIn={() => setAuthView('signin')} />;
-    }
     return (
-      <AuthForm
-        mode={authView}
-        onSubmit={authView === 'signup' ? auth.signUp : auth.signIn}
-        onSwitchMode={() => setAuthView(authView === 'signup' ? 'signin' : 'signup')}
-        onClose={() => setAuthView('landing')}
-      />
+      <>
+        <Landing onGetStarted={() => setAuthView('signup')} onSignIn={() => setAuthView('signin')} />
+        {authView !== 'landing' && (
+          <AuthForm
+            mode={authView}
+            onSubmit={authView === 'signup' ? auth.signUp : auth.signIn}
+            onSwitchMode={() => setAuthView(authView === 'signup' ? 'signin' : 'signup')}
+            onClose={() => setAuthView('landing')}
+          />
+        )}
+      </>
     );
   }
 

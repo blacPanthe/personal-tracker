@@ -11,12 +11,12 @@ export function useAuth() {
       .finally(() => setChecking(false));
   }, []);
 
-  const handleSignIn = async (email, password) => {
-    setUser(await signIn(email, password));
+  const handleSignIn = async (email, password, remember) => {
+    setUser(await signIn(email, password, remember));
   };
 
-  const handleSignUp = async (email, password) => {
-    setUser(await signUp(email, password));
+  const handleSignUp = async (email, password, remember) => {
+    setUser(await signUp(email, password, remember));
   };
 
   const handleSignOut = async () => {
