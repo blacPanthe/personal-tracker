@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
@@ -14,7 +15,8 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
     setError(null);
     setLoading(true);
     try {
-      await onSubmit(email, password, remember);
+      if (isSignUp) await onSubmit(name, email, password, remember);
+      else await onSubmit(email, password, remember);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -54,6 +56,9 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
             {isSignUp ? 'Sign up to start tracking with Baseline.' : 'Sign in to access your Baseline account.'}
           </p>
 
+          {isSignUp && (
+            <input type="text" placeholder="Name" required value={name} onChange={(e) => setName(e.target.value)} />
+          )}
           <input
             type="email"
             placeholder="Email address"

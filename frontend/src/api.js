@@ -27,11 +27,11 @@ async function requestJson(path, options) {
   return res.json();
 }
 
-export async function signUp(email, password, remember = true) {
+export async function signUp(name, email, password, remember = true) {
   const result = await requestJson('/auth/signup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ name, email, password }),
   });
   setToken(result.token, remember);
   return result.user;

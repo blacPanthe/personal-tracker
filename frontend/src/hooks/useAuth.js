@@ -15,8 +15,8 @@ export function useAuth() {
     setUser(await signIn(email, password, remember));
   };
 
-  const handleSignUp = async (email, password, remember) => {
-    setUser(await signUp(email, password, remember));
+  const handleSignUp = async (name, email, password, remember) => {
+    setUser(await signUp(name, email, password, remember));
   };
 
   const handleSignOut = async () => {

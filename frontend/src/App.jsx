@@ -99,7 +99,7 @@ export default function App() {
               Workout Plan
             </button>
           </div>
-          <UserMenu email={auth.user.email} onProfile={() => setTab('profile')} onSignOut={auth.signOut} />
+          <UserMenu name={auth.user.name} onProfile={() => setTab('profile')} onSignOut={auth.signOut} />
         </div>
       </nav>
       <div className="app">

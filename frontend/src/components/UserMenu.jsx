@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export default function UserMenu({ email, onProfile, onSignOut }) {
+export default function UserMenu({ name, onProfile, onSignOut }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef(null);
 
@@ -13,13 +13,13 @@ export default function UserMenu({ email, onProfile, onSignOut }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
-  const initial = email ? email[0].toUpperCase() : '?';
+  const initial = name ? name[0].toUpperCase() : '?';
 
   return (
     <div className="user-menu" ref={rootRef}>
       <button type="button" className="user-menu-trigger" onClick={() => setOpen((o) => !o)}>
         <span className="user-menu-avatar">{initial}</span>
-        <span className="user-menu-email">{email}</span>
+        <span className="user-menu-email">{name}</span>
         <span className={`user-menu-chevron${open ? ' open' : ''}`}>⌄</span>
       </button>
 

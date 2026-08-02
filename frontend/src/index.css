@@ -819,6 +819,7 @@ body {
   font-size: 13px;
 }
 
+.auth-form input[type='text'],
 .auth-form input[type='email'],
 .auth-form input[type='password'] {
   background: #0d0d10;
@@ -831,6 +832,7 @@ body {
   width: 100%;
 }
 
+.auth-form input[type='text']:focus,
 .auth-form input[type='email']:focus,
 .auth-form input[type='password']:focus {
   outline: none;
