@@ -626,11 +626,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 64px;
+  justify-content: flex-start;
+  gap: 96px;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 96px 24px;
+  padding: 96px 24px 64px;
   text-align: center;
 }
 
@@ -712,6 +712,136 @@ body {
   font-family: var(--mono);
   font-size: 13px;
   line-height: 1.5;
+}
+
+.landing-section {
+  width: 100%;
+}
+
+.landing-section-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin: 0 0 40px;
+  color: var(--text);
+}
+
+.landing-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  text-align: left;
+}
+
+.landing-step {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+}
+
+.landing-step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--neon);
+  color: #0a0a0c;
+  font-weight: 700;
+  font-family: var(--mono);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.landing-step h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.landing-step p {
+  margin: 0;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.landing-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.landing-faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.landing-faq-item summary {
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 14px;
+  list-style: none;
+}
+
+.landing-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.landing-faq-item summary::before {
+  content: '+';
+  color: var(--neon);
+  display: inline-block;
+  width: 16px;
+  font-weight: 700;
+}
+
+.landing-faq-item[open] summary::before {
+  content: '−';
+}
+
+.landing-faq-item p {
+  margin: 12px 0 0 16px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.landing-final-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.landing-final-cta h2 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin: 0;
+  color: var(--text);
+}
+
+.landing-footer {
+  width: 100%;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.landing-footer p {
+  margin: 0;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
 }
 
 .auth-overlay {
