@@ -840,6 +840,32 @@ body {
   box-shadow: 0 0 0 3px var(--neon-dim);
 }
 
+.auth-password-field {
+  position: relative;
+}
+
+.auth-form .auth-password-field input {
+  padding-right: 40px;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.7;
+}
+
+.auth-password-toggle:hover {
+  opacity: 1;
+}
+
 .auth-remember {
   display: flex;
   align-items: center;

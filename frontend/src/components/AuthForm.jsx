@@ -5,6 +5,7 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -66,14 +67,24 @@ export default function AuthForm({ mode, onSubmit, onSwitchMode, onClose }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            minLength={isSignUp ? 8 : undefined}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="auth-password-field">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              required
+              minLength={isSignUp ? 8 : undefined}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="auth-password-toggle"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {showPassword ? '🙈' : '👁'}
+            </button>
+          </div>
 
           <label className="auth-remember">
             <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
