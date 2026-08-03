@@ -6,6 +6,7 @@ import AuthForm from './components/AuthForm';
 import ProfileForm from './components/ProfileForm';
 import UserMenu from './components/UserMenu';
 import PlanResults from './components/PlanResults';
+import Analytics from './components/Analytics';
 import { usePlanForm } from './hooks/usePlanForm';
 import { useAuth } from './hooks/useAuth';
 import { toLocalIso } from './heatmapUtils';
@@ -98,6 +99,12 @@ export default function App() {
             >
               Workout Plan
             </button>
+            <button
+              className={`navbar-link${tab === 'analytics' ? ' active' : ''}`}
+              onClick={() => setTab('analytics')}
+            >
+              Analytics
+            </button>
           </div>
           <UserMenu name={auth.user.name} onProfile={() => setTab('profile')} onSignOut={auth.signOut} />
         </div>
@@ -121,6 +128,13 @@ export default function App() {
         )}
         {tab === 'workouts' && (
           <PlanResults mode="workouts" plan={planForm.plan} onGoToProfile={() => setTab('profile')} />
+        )}
+        {tab === 'analytics' && (
+          <Analytics
+            metrics={metrics}
+            entryMapsByMetric={entryMapsByMetric}
+            targetWeightKg={Number(planForm.profile.targetWeightKg) || null}
+          />
         )}
       </div>
     </>
