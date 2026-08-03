@@ -632,11 +632,31 @@ body {
   margin: 0 auto;
   padding: 96px 24px 64px;
   text-align: center;
+  overflow-x: clip;
+}
+
+.landing-hero {
+  position: relative;
+}
+
+.landing-hero::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 640px;
+  height: 400px;
+  background: radial-gradient(circle, var(--neon-dim) 0%, transparent 70%);
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .landing-mark {
   border-radius: 12px;
   margin-bottom: 24px;
+  position: relative;
 }
 
 .landing-hero h1 {
@@ -698,6 +718,19 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.landing-feature-card:hover {
+  border-color: var(--neon);
+  transform: translateY(-3px);
+}
+
+.landing-feature-icon {
+  display: block;
+  color: var(--neon);
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .landing-feature-card h3 {
@@ -739,6 +772,12 @@ body {
   border-radius: 12px;
   padding: 20px;
   position: relative;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.landing-step:hover {
+  border-color: var(--neon);
+  transform: translateY(-3px);
 }
 
 .landing-step-number {
@@ -782,6 +821,12 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 16px 20px;
+  transition: border-color 0.15s ease;
+}
+
+.landing-faq-item:hover,
+.landing-faq-item[open] {
+  border-color: var(--neon);
 }
 
 .landing-faq-item summary {
@@ -835,6 +880,11 @@ body {
   width: 100%;
   border-top: 1px solid var(--border);
   padding-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .landing-footer p {
@@ -842,6 +892,17 @@ body {
   color: var(--text-dim);
   font-family: var(--mono);
   font-size: 12px;
+}
+
+.landing-footer a {
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+.landing-footer a:hover {
+  color: var(--neon);
 }
 
 .auth-overlay {

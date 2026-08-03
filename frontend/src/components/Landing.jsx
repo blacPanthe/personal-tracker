@@ -1,17 +1,21 @@
 const FEATURES = [
   {
+    icon: '◆',
     title: 'Profile',
     description: 'Log your stats, medical history, allergies, and weekly schedule once.',
   },
   {
+    icon: '▦',
     title: 'Trackers',
     description: 'GitHub-contribution-style heatmaps for protein, water, steps, sleep, and more.',
   },
   {
+    icon: '▤',
     title: 'Meal Plan',
     description: 'A calorie and macro-targeted weekly meal plan generated from your goals.',
   },
   {
+    icon: '▲',
     title: 'Workout Plan',
     description: 'A weekly training split built around your real schedule and free hours.',
   },
@@ -80,6 +84,7 @@ export default function Landing({ onGetStarted, onSignIn }) {
       <section className="landing-features">
         {FEATURES.map((f) => (
           <div className="landing-feature-card" key={f.title}>
+            <span className="landing-feature-icon">{f.icon}</span>
             <h3>{f.title}</h3>
             <p>{f.description}</p>
           </div>
@@ -119,7 +124,10 @@ export default function Landing({ onGetStarted, onSignIn }) {
       </section>
 
       <footer className="landing-footer">
-        <p>Baseline</p>
+        <p>Baseline — your habits, mapped like commits.</p>
+        <a href="https://github.com/blacPanthe/personal-tracker" target="_blank" rel="noopener noreferrer">
+          View on GitHub
+        </a>
       </footer>
     </div>
   );
