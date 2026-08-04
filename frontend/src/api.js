@@ -62,6 +62,19 @@ export async function getCurrentUser() {
   return (await res.json()).user;
 }
 
+export async function getProfile() {
+  const result = await requestJson('/profile');
+  return result.profile;
+}
+
+export async function saveProfile(profile, schedule) {
+  await requestJson('/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ profile, schedule }),
+  });
+}
+
 export async function getMetrics() {
   return requestJson('/metrics');
 }
