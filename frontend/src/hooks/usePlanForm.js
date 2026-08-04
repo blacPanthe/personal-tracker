@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generatePlan } from '../api';
+import { generatePlan, getProfile, saveProfile } from '../api';
 
 export const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -31,11 +31,19 @@ export function usePlanForm() {
   const updateDay = (index, patch) =>
     setSchedule((prev) => prev.map((d, i) => (i === index ? { ...d, ...patch } : d)));
 
+  const loadProfile = async () => {
+    const saved = await getProfile();
+    if (!saved) return;
+    if (saved.profile) setProfile((p) => ({ ...p, ...saved.profile }));
+    if (Array.isArray(saved.schedule) && saved.schedule.length === 7) setSchedule(saved.schedule);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
+      await saveProfile(profile, schedule);
       const result = await generatePlan({
         heightCm: Number(profile.heightCm),
         age: Number(profile.age),
@@ -54,5 +62,5 @@ export function usePlanForm() {
     }
   };
 
-  return { profile, schedule, plan, error, loading, updateField, updateDay, handleSubmit };
+  return { profile, schedule, plan, error, loading, updateField, updateDay, handleSubmit, loadProfile };
 }
