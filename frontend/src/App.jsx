@@ -29,7 +29,7 @@ export default function App() {
   useEffect(() => {
     if (!auth.user) return;
     setDataLoading(true);
-    Promise.all([getMetrics(), getEntriesSummary(isoDaysAgo(371), isoDaysAgo(0))])
+    Promise.all([getMetrics(), getEntriesSummary(isoDaysAgo(371), isoDaysAgo(0)), planForm.loadProfile()])
       .then(([m, e]) => {
         setMetrics(m);
         setEntries(e);
