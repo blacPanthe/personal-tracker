@@ -57,6 +57,12 @@ db.exec(`
     value REAL NOT NULL,
     UNIQUE(metric_id, date)
   );
+
+  CREATE TABLE IF NOT EXISTS profiles (
+    user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    data TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
 `);
 
 const defaultMetrics = [
@@ -123,6 +129,20 @@ app.post('/api/auth/signout', requireAuth(db), (req, res) => {
 app.get('/api/auth/me', requireAuth(db), (req, res) => {
   const user = db.prepare('SELECT id, name, email FROM users WHERE id = ?').get(req.userId);
   res.json({ user });
+});
+
+app.get('/api/profile', requireAuth(db), (req, res) => {
+  const row = db.prepare('SELECT data FROM profiles WHERE user_id = ?').get(req.userId);
+  res.json({ profile: row ? JSON.parse(row.data) : null });
+});
+
+app.put('/api/profile', requireAuth(db), (req, res) => {
+  db.prepare(`
+    INSERT INTO profiles (user_id, data, updated_at)
+    VALUES (?, ?, datetime('now'))
+    ON CONFLICT(user_id) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at
+  `).run(req.userId, JSON.stringify(req.body));
+  res.status(204).end();
 });
 
 app.get('/api/metrics', requireAuth(db), (req, res) => {
